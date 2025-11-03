@@ -53,7 +53,7 @@ char GetResolution(char request[])
     else if (inString(request, "9bit")==1) {
 		return(0xE2); // 0b0010;
 	}
-    else{ //if (inString(request, "8bit")==1) {
+    else if (inString(request, "8bit")==1) {
 		return(0xE0); // 0b0000;
 	}
 
