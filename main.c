@@ -53,11 +53,10 @@ char GetResolution(char request[])
     else if (inString(request, "9bit")==1) {
 		return(0xE2); // 0b0010;
 	}
-    else if (inString(request, "8bit")==1) {
+    else{ //if (inString(request, "8bit")==1) {
 		return(0xE0); // 0b0000;
 	}
 
-    // return res_status;
 }
 int updateLEDStatus(char request[])
 {
@@ -101,6 +100,8 @@ int main(void) {
   initSPI(0b111, 0, 1);  
 
   initializeTemperatureSensor();
+
+  getTemperatureData();
     
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -119,7 +120,6 @@ int main(void) {
       request[charIndex++] = readChar(USART);
     }
 
-    // TODO: Add SPI code here for reading temperature
     char resolution = GetResolution(request); //get resolution
     ConfigRes(resolution);  // change resolution
 

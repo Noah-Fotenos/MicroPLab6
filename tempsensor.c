@@ -51,41 +51,10 @@ void ConfigRes(char resolution) {
  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
  spiSendReceive(resolution); // setup resolution
  delay_millis(TIM15, 900); //wait max conversion time
-    // if (resStatus == 0xE8) {
-    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
-    //  spiSendReceive(resStatus); // setup resolution
-    //   delay_millis(TIM15, 900); //wait max conversion time
-    // }
-    // else if (resStatus == 0xE6) {
-    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
-    //  spiSendReceive(resStatus); // setup resolution
-    //   delay_millis(TIM15, 600);
-    // }
-    // else if (resStatus == 0xE4) {
-    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
-    //  spiSendReceive(resStatus); // setup resolution
-    //   delay_millis(TIM15, 300);
-    // }
-    // else if (resStatus == 0xE2) {
-    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
-    //  spiSendReceive(resStatus); // setup resolution
-    //   delay_millis(TIM15, 150);
-    // }
-    // else if (resStatus == 0xE0) {
-    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
-    //  spiSendReceive(resStatus); // setup resolution
-    //   delay_millis(TIM15, 75);
-    // }
  digitalWrite(SPI_CE, 0); // CS low
 }
 
 float getTemperatureData() {
-
-    // digitalWrite(PB1, 1); 
-    // spiSendReceive(0x00); // read from config register for testing purposes
-    // uint8_t config_readback = spiSendReceive(0x00);
-    // digitalWrite(PB1, 0);
-
 
     digitalWrite(SPI_CE, 1);
     spiSendReceive(0x02); // tell sensor we want to read MSB
@@ -99,7 +68,8 @@ float getTemperatureData() {
     digitalWrite(SPI_CE, 0); // set CS to high
     
     // calculate temperature
-    float temperature = (float) msb + ((float) lsb / 256.0);
+    int16_t sensor_bits = ((uint16_t) msb << 8) | (uint16_t) lsb;
+    float temperature = (float) sensor_bits / 256.0;
 
     return temperature;
 }
