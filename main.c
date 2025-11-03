@@ -10,6 +10,7 @@ Date: 9/14/19
 #include <stdlib.h>
 #include <stdio.h>
 #include "main.h"
+#include "tempsensor.h"
 
 /////////////////////////////////////////////////////////////////
 // Provided Constants and Functions
@@ -62,11 +63,16 @@ int main(void) {
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
+
+  RCC->APB2ENR |= (1 << 12); // ENABLE SPI1
+
+  configureSPIPins();
   
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
-  // TODO: Add SPI initialization code
-    initSPI(4, 0, 0);
+  initSPI(0b111, 0, 1);  
+
+  initializeTemperatureSensor();
     
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -86,9 +92,10 @@ int main(void) {
     }
 
     // TODO: Add SPI code here for reading temperature
-    int temp = spiSendReceive(2);
-    char temp_string[25];
-    sprintf(temp_string, "<h2>Temperature %d</h2>", temp);
+    float temperature = getTemperatureData();
+    //float temperature = 0;
+    char temperature_string[32];
+    sprintf(temperature_string,"Temperature is %0.4f C", temperature);
     
     // Update string with current LED state
   
@@ -112,7 +119,7 @@ int main(void) {
     sendString(USART, "</p>");
 
     sendString(USART, "</p>");
-    sendString(USART,  temp_string);
+    sendString(USART,  temperature_string);
     sendString(USART, "</p>");
 
   

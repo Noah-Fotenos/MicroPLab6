@@ -1,2 +1,2 @@
 Output/Debug/Obj/lab6/SEGGER_THUMB_Startup.o: \
- /Users/noahfotenos/Documents/SEGGER\ Embedded\ Studio\ Projects/lab6/SEGGER_THUMB_Startup.s
+ C:\Users\kacassidy\Documents\GitHub\MicroPLab6\SEGGER_THUMB_Startup.s
