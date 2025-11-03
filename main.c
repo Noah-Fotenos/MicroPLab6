@@ -66,7 +66,15 @@ int main(void) {
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
   // TODO: Add SPI initialization code
-    initSPI(4, 0, 0);
+    initSPI(4, 0, 1);
+
+    //// TODO: Add SPI code here for reading temperature
+    //digitalWrite(SPI_CE, 1);
+    //spiSendReceive(0);
+    //uint8_t temp = spiSendReceive(0);
+    //digitalWrite(SPI_CE, 0);
+    //char temp_string[25];
+    //sprintf(temp_string, "<h2>Temperature %X</h2>", temp);
     
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -85,10 +93,13 @@ int main(void) {
       request[charIndex++] = readChar(USART);
     }
 
-    // TODO: Add SPI code here for reading temperature
-    int temp = spiSendReceive(2);
+    //// TODO: Add SPI code here for reading temperature
+    digitalWrite(SPI_CE, 1);
+    spiSendReceive(0);
+    uint8_t temp = spiSendReceive(0);
+    digitalWrite(SPI_CE, 0);
     char temp_string[25];
-    sprintf(temp_string, "<h2>Temperature %d</h2>", temp);
+    sprintf(temp_string, "<h2>Temperature %X</h2>", temp);
     
     // Update string with current LED state
   
