@@ -46,6 +46,38 @@ void initializeTemperatureSensor() {
     digitalWrite(SPI_CE, 0); // CS low
 }
 
+void ConfigRes(char resolution) {
+ digitalWrite(SPI_CE, 1);
+ spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
+ spiSendReceive(resolution); // setup resolution
+ delay_millis(TIM15, 900); //wait max conversion time
+    // if (resStatus == 0xE8) {
+    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
+    //  spiSendReceive(resStatus); // setup resolution
+    //   delay_millis(TIM15, 900); //wait max conversion time
+    // }
+    // else if (resStatus == 0xE6) {
+    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
+    //  spiSendReceive(resStatus); // setup resolution
+    //   delay_millis(TIM15, 600);
+    // }
+    // else if (resStatus == 0xE4) {
+    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
+    //  spiSendReceive(resStatus); // setup resolution
+    //   delay_millis(TIM15, 300);
+    // }
+    // else if (resStatus == 0xE2) {
+    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
+    //  spiSendReceive(resStatus); // setup resolution
+    //   delay_millis(TIM15, 150);
+    // }
+    // else if (resStatus == 0xE0) {
+    //  spiSendReceive(0x80); // tell temp sensor we are writing to it for setup
+    //  spiSendReceive(resStatus); // setup resolution
+    //   delay_millis(TIM15, 75);
+    // }
+ digitalWrite(SPI_CE, 0); // CS low
+}
 
 float getTemperatureData() {
 

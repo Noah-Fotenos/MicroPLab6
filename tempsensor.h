@@ -11,6 +11,8 @@ void configureSPIPins();
 
 float getTemperatureData();
 
+void ConfigRes(char resolution);
+
 void initializeTemperatureSensor();
 
 #endif
