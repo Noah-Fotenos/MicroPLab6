@@ -10,6 +10,7 @@ Date: 9/14/19
 #include <stdlib.h>
 #include <stdio.h>
 #include "main.h"
+#include "tempsensor.h"
 
 /////////////////////////////////////////////////////////////////
 // Provided Constants and Functions
@@ -22,6 +23,13 @@ char* webpageStart = "<!DOCTYPE html><html><head><title>E155 Web Server Demo Web
 	<body><h1>E155 Web Server Demo Webpage</h1>";
 char* ledStr = "<p>LED Control:</p><form action=\"ledon\"><input type=\"submit\" value=\"Turn the LED on!\"></form>\
 	<form action=\"ledoff\"><input type=\"submit\" value=\"Turn the LED off!\"></form>";
+
+char* resconfig = "<p>Resolution Control:</p><form action=\"12bit\"><input type=\"submit\" value=\"12-bit resolution\"></form>\
+	<form action=\"11bit\"><input type=\"submit\" value=\"11-bit resolution\"></form>\
+        <form action=\"10bit\"><input type=\"submit\" value=\"10-bit resolution\"></form>\
+        <form action=\"9bit\"><input type=\"submit\" value=\"9-bit resolution\"></form>\
+        <form action=\"8bit\"><input type=\"submit\" value=\"8-bit resolution\"></form>";
+
 char* webpageEnd   = "</body></html>";
 
 //determines whether a given character sequence is in a char array request, returning 1 if present, -1 if not present
@@ -30,6 +38,27 @@ int inString(char request[], char des[]) {
 	return -1;
 }
 
+char GetResolution(char request[])
+{
+    // set resolution config register based on form input
+    if (inString(request, "12bit")==1) {
+            return(0xE8);
+    }
+    else if (inString(request, "11bit")==1) {
+            return(0xE6); // 0b0110;
+    }
+    else if (inString(request, "10bit")==1) {
+		return(0xE4); // 0b0100;
+	}
+    else if (inString(request, "9bit")==1) {
+		return(0xE2); // 0b0010;
+	}
+    else if (inString(request, "8bit")==1) {
+		return(0xE0); // 0b0000;
+	}
+  return 0xE8; // default to 12 bit
+
+}
 int updateLEDStatus(char request[])
 {
 	int led_status = 0;
@@ -62,19 +91,18 @@ int main(void) {
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
+
+  RCC->APB2ENR |= (1 << 12); // ENABLE SPI1
+
+  configureSPIPins();
   
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
-  // TODO: Add SPI initialization code
-    initSPI(4, 0, 1);
+  initSPI(0b111, 0, 1);  
 
-    //// TODO: Add SPI code here for reading temperature
-    //digitalWrite(SPI_CE, 1);
-    //spiSendReceive(0);
-    //uint8_t temp = spiSendReceive(0);
-    //digitalWrite(SPI_CE, 0);
-    //char temp_string[25];
-    //sprintf(temp_string, "<h2>Temperature %X</h2>", temp);
+  initializeTemperatureSensor();
+
+  getTemperatureData();
     
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -93,13 +121,14 @@ int main(void) {
       request[charIndex++] = readChar(USART);
     }
 
-    //// TODO: Add SPI code here for reading temperature
-    digitalWrite(SPI_CE, 1);
-    spiSendReceive(0);
-    uint8_t temp = spiSendReceive(0);
-    digitalWrite(SPI_CE, 0);
-    char temp_string[25];
-    sprintf(temp_string, "<h2>Temperature %X</h2>", temp);
+    char resolution = GetResolution(request); //get resolution
+    ConfigRes(resolution);  // change resolution
+
+
+    float temperature = getTemperatureData();
+    //float temperature = 0;
+    char temperature_string[32];
+    sprintf(temperature_string,"Temperature is %0.4f C", temperature);
     
     // Update string with current LED state
   
@@ -122,8 +151,10 @@ int main(void) {
     sendString(USART, ledStatusStr);
     sendString(USART, "</p>");
 
+    sendString(USART, resconfig); // buttons for controlling resolution
+
     sendString(USART, "</p>");
-    sendString(USART,  temp_string);
+    sendString(USART,  temperature_string);
     sendString(USART, "</p>");
 
   

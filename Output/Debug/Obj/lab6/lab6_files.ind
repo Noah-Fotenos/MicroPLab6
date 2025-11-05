@@ -7,6 +7,7 @@
 "Output/Debug/Obj/lab6/STM32L432KC_SPI.o"
 "Output/Debug/Obj/lab6/STM32L432KC_TIM.o"
 "Output/Debug/Obj/lab6/STM32L432KC_USART.o"
+"Output/Debug/Obj/lab6/tempsensor.o"
 "Output/Debug/Obj/lab6/SEGGER_THUMB_Startup.o"
 "Output/Debug/Obj/lab6/stm32l432xx_Vectors.o"
 "Output/Debug/Obj/lab6/STM32L4xx_Startup.o"
