@@ -1,7 +1,7 @@
 /**
     Main Header: Contains general defines and selected portions of CMSIS files
     @file main.h
-    @author Josh Brake
+    @author Noah Fotenos
     @version 1.0 10/7/2020
 */
 
