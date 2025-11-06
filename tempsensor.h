@@ -1,7 +1,9 @@
 // STM32L432KC_SPI.h
-// Noah Fotenos
-// Nfotenos@g.hmc.edu
-// 10/28/25
+/*
+Author: Noah Fotenos
+Email: nfotenos@g.hmc.edu
+Date: 11/6/25
+*/
 // header file for spi funcions
 
 #ifndef Temp_sensor
