@@ -1,7 +1,9 @@
 // STM32L432KC_SPI.c
-// Noah Fotenos
-// Nfotenos@g.hmc.edu
-// 10/28/25
+/*
+Author: Noah Fotenos
+Email: nfotenos@g.hmc.edu
+Date: 11/6/25
+*/
 // difines functions for SPI communication on the STM32L432KC microcontroller
 
 #include <stdint.h>

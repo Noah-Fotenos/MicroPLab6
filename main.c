@@ -1,8 +1,8 @@
 /*
-File: Lab_6_JHB.c
-Author: Josh Brake
-Email: jbrake@hmc.edu
-Date: 9/14/19
+File: main.c
+Author: Noah Fotenos
+Email: nfotenos@g.hmc.edu
+Date: 11/6/25
 */
 
 
@@ -56,7 +56,8 @@ char GetResolution(char request[])
     else if (inString(request, "8bit")==1) {
 		return(0xE0); // 0b0000;
 	}
-  return 0xE8; // default to 12 bit
+  return 0;  // default to 12 bit 
+    
 
 }
 int updateLEDStatus(char request[])
@@ -122,9 +123,10 @@ int main(void) {
     }
 
     char resolution = GetResolution(request); //get resolution
-    ConfigRes(resolution);  // change resolution
-
-
+    if (resolution != 0){
+      ConfigRes(resolution);  // change resolution
+    }
+  
     float temperature = getTemperatureData();
     //float temperature = 0;
     char temperature_string[32];
